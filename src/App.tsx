@@ -39,15 +39,8 @@ export function EntityMesh({ entity }: { entity: Entity }) {
   const [isActive, setIsActive] = useState(false);
   return (
     <mesh
-      onPointerDown={(e) => {
-        e.stopPropagation();
-        (e.target as HTMLElement).setPointerCapture(e.pointerId);
-      }}
-      onPointerUp={(e) => {
-        e.stopPropagation();
+      onClick={() => {
         setIsActive(!isActive);
-
-        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
       }}
       position={position}
     >
@@ -223,7 +216,7 @@ export function MoveEntityHelper({
       const delta = startPointerPos.current - e.clientX;
       const zDelta = delta * sensitivity;
       setPosition(
-        (prev) => new Vector3(prev.x, prev.y, startEntityPos.current + zDelta),
+        (prev) => new Vector3(prev.x, prev.y, startEntityPos.current - zDelta),
       );
     }
   };
