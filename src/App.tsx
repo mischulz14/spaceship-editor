@@ -36,17 +36,32 @@ function App() {
 
 export function EntityMesh({ entity }: { entity: Entity }) {
   const [position, setPosition] = useState(() => entity.position.clone());
+  const [isActive, setIsActive] = useState(false);
   return (
-    <mesh position={position}>
+    <mesh
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      }}
+      onPointerUp={(e) => {
+        e.stopPropagation();
+        setIsActive(!isActive);
+
+        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+      }}
+      position={position}
+    >
       <boxGeometry
         args={[entity.dimensions.x, entity.dimensions.y, entity.dimensions.z]}
       />
       <meshStandardMaterial />
-      <EntityMeshHelper
-        entity={entity}
-        position={position}
-        setPosition={setPosition}
-      />
+      {isActive && (
+        <EntityMeshHelper
+          entity={entity}
+          position={position}
+          setPosition={setPosition}
+        />
+      )}
     </mesh>
   );
 }
